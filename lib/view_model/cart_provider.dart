@@ -1,14 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopping_cart/models/database/database_helper.dart';
 
 import '../models/database/database_model/cart_model.dart';
 class CartProvider extends ChangeNotifier{
 
-     int _counter=0;
-     int get counter => _counter;
+  DBHelper dbHelper = DBHelper();
+  late Future<List<Cart>> _cart;
+  Future<List<Cart>> get cart => _cart;
+
+  Future<List<Cart>> getData() async{
+    _cart = dbHelper.fetchData();
+    return _cart;
+  }
+  int _counter=0;
+     int get counter =>_counter;
 
      double _totalPrice=0;
-     double get totalPrice => _totalPrice;
+     double get totalPrice=>_totalPrice;
 
      void _setPrefItems()async{
        SharedPreferences pref = await SharedPreferences.getInstance();
@@ -17,12 +26,11 @@ class CartProvider extends ChangeNotifier{
        notifyListeners();
      }
 
-     void _getPrefItems()async{
+     void _getPrefItems ()async{
        SharedPreferences pref = await SharedPreferences.getInstance();
-      pref.getInt("cart_item");
-       pref.getDouble("total_price");
+        _counter = pref.getInt("cart_item") ?? 0;
+       _totalPrice = pref.getDouble("total_price") ?? 0;
        notifyListeners();
-
      }
      void addCounter(){
        _counter++;
@@ -57,7 +65,29 @@ class CartProvider extends ChangeNotifier{
        return _totalPrice;
      }
 
-     addToDB(Cart cart) async {
+     int addFinalQuantity(int quantity){
+       quantity++;
+       notifyListeners();
+        return quantity;
 
      }
+  int addFinalPrice(int quantity ,int price){
+       price = quantity * price;
+    notifyListeners();
+     return price;
+
+  }
+  int subFinalQuantity(int quantity){
+    quantity--;
+    notifyListeners();
+    return quantity;
+
+  }
+  int subFinalPrice(int quantity ,int price){
+    price = quantity * price;
+    notifyListeners();
+    return price;
+
+  }
+
 }

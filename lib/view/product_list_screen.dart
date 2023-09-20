@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_cart/models/database/database_helper.dart';
 import 'package:shopping_cart/models/database/database_model/cart_model.dart';
+import 'package:shopping_cart/utils/routes/routes_name.dart';
 import 'package:shopping_cart/utils/utils.dart';
 import 'package:shopping_cart/view_model/cart_provider.dart';
 
@@ -36,7 +37,7 @@ class _ProductListViewState extends State<ProductListView> {
   List<int> productPrize =[80,60,70,120,130,50,60,110,90,140,125,145,30,40,60,160,145,75,125];
   List<String> productUnit = [
     'KG', // Apple
-    'KG', // Banana
+    'dazon', // Banana
     'KG', // Cherry
     'KG', // Date
     'KG', // Grapes
@@ -45,7 +46,7 @@ class _ProductListViewState extends State<ProductListView> {
     'KG', // Orange
     'KG', // Peach
     'KG', // Strawberry
-    'dozen', // Blueberry
+    'kg', // Blueberry
     'piece', // Pineapple
     'KG', // Watermelon
     'KG', // Lemon
@@ -81,21 +82,26 @@ class _ProductListViewState extends State<ProductListView> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CartProvider>(context);
+    //final provider = Provider.of<CartProvider>(context);
    return Scaffold(
      appBar: AppBar(
        title:  Text("Product List",style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
        backgroundColor: Colors.purple,
        centerTitle: true,
        actions: [
-         Badge(
-           label: Consumer<CartProvider>(
-         builder: (context,value,child){
-           return  Text(value.getCounter().toString());
+         InkWell(
+           onTap: (){
+             Navigator.pushNamed(context, RoutesName.cartList);
+           },
+           child: Badge(
+             label: Consumer<CartProvider>(
+           builder: (context,value,child){
+             return  Text(value.getCounter().toString());
    },
      )
-           ,
-           child: Icon(Icons.shopping_bag_outlined,color: Colors.white,),),
+             ,
+             child: Icon(Icons.shopping_bag_outlined,color: Colors.white,),),
+         ),
          SizedBox(width: 20,)
        ],
      ),
@@ -127,35 +133,40 @@ class _ProductListViewState extends State<ProductListView> {
                                ),
                              Align(
                                alignment: Alignment.bottomRight,
-                               child: InkWell(
-                                 onTap: () async{
-                                await dbHelper.inserts(
-                                  Cart(id: index,
-                                      productId: index.toString(),
-                                      productName: productName.toString(),
-                                      intialPrize: productPrize[index],
-                                      productPrize: productPrize[index],
-                                      quantity: 1,
-                                      unitTag: productUnit[index].toString(),
-                                      image: productImage[index].toString())
-                                ).then((value){
-                                  Utils.toastMessage("Item Added");
-                                  provider.addCounter();
-                                  provider.addTotalPrice(double.parse(productPrize[index].toString()));
-                                }).onError((error, stackTrace){
-
-                                });
-                                 },
-                                 child: Container(
-                                   height: 35,
-                                   width: 100,
-                                   decoration:  BoxDecoration(
-                                     color: Colors.green,
-                                     borderRadius: BorderRadius.circular(10)
+                               child: Consumer<CartProvider>(builder: ( context, val, child) {
+                                 return   InkWell(
+                                   onTap: () async{
+                                     await dbHelper.insertIntoDB(
+                                         Cart(id: index,
+                                             productId: index.toString(),
+                                             productName: productName[index],
+                                             intialPrize: productPrize[index],
+                                             productPrize: productPrize[index],
+                                             quantity: 1,
+                                             unitTag: productUnit[index].toString(),
+                                             image: productImage[index].toString())
+                                     ).then((value){
+                                       Utils.toastMessage("Item Added in Cart");
+                                       val.addCounter();
+                                       val.addTotalPrice(double.parse(productPrize[index].toString()));
+                                     }).onError((error, stackTrace){
+                                     Utils.toastMessage("Already Item Added in Cart");
+                                     });
+                                   },
+                                   child: Container(
+                                     height: 35,
+                                     width: 100,
+                                     decoration:  BoxDecoration(
+                                         color: Colors.green,
+                                         borderRadius: BorderRadius.circular(10)
+                                     ),
+                                     child: Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),)),
                                    ),
-                                   child: Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),)),
-                                 ),
-                               ),
+                                 );
+                               },
+
+                               )
+
                              )
                              ],
                            ),

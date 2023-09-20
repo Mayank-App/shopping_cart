@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/utils/routes/routes_name.dart';
+import 'package:shopping_cart/view/cart_screen.dart';
 import 'package:shopping_cart/view/product_list_screen.dart';
 
 class Routes{
@@ -9,6 +10,8 @@ class Routes{
     switch(settings.name){
       case RoutesName.productList:
         return MaterialPageRoute(builder: (BuildContext context)=>ProductListView());
+      case RoutesName.cartList:
+        return MaterialPageRoute(builder: (BuildContext context)=>CartScreen());
       default:
         return MaterialPageRoute(builder: (_){
           return Scaffold(

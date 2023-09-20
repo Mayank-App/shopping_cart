@@ -110,7 +110,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                    int quantity = snapshot.data![index].quantity;
                                                                    int finalQuantity= val.subFinalQuantity(quantity);
                                                                    print(finalQuantity);
-                                                                   int price = snapshot.data![index].productPrize;
+                                                                   if(finalQuantity>=1){
+                                                                   int price = snapshot.data![index].intialPrize;
                                                                    int finalPrice = val.subFinalPrice(finalQuantity, price);
                                                                    print(finalPrice);
                                                                    dbHelper.updateData(
@@ -119,12 +120,14 @@ class _CartScreenState extends State<CartScreen> {
                                                                            productId: snapshot.data![index].id.toString(),
                                                                            productName: snapshot.data![index].productName,
                                                                            intialPrize: snapshot.data![index].intialPrize,
-                                                                           productPrize: price,
+                                                                           productPrize: finalPrice,
                                                                            quantity: finalQuantity,
                                                                            unitTag: snapshot.data![index].unitTag,
                                                                            image: snapshot.data![index].image)
                                                                    ).then((value) {});
-                                                                   val.removeTotalPrice(snapshot.data![index].intialPrize.toDouble());
+                                                                   val.removeTotalPrice(snapshot.data![index].intialPrize.toDouble())
+                                                                   ;
+                                                                   }
                                                                  }
                                                                 , child: Icon(Icons.remove)),
                                                              Text(snapshot.data![index].quantity.toString()
@@ -133,7 +136,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                  onTap: (){
                                                                    int quantity = snapshot.data![index].quantity;
                                                                    int finalQuantity= val.addFinalQuantity(quantity);
-                                                                    int price = snapshot.data![index].productPrize;
+                                                                    int price = snapshot.data![index].intialPrize;
                                                                    int finalPrice = val.addFinalPrice(finalQuantity, price);
                                                                       dbHelper.updateData(
                                                                         Cart(
@@ -141,7 +144,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                             productId: snapshot.data![index].id.toString(),
                                                                             productName: snapshot.data![index].productName,
                                                                             intialPrize: snapshot.data![index].intialPrize,
-                                                                            productPrize: price,
+                                                                            productPrize: finalPrice,
                                                                             quantity: finalQuantity,
                                                                             unitTag: snapshot.data![index].unitTag,
                                                                             image: snapshot.data![index].image)

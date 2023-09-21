@@ -107,50 +107,32 @@ class _CartScreenState extends State<CartScreen> {
                                                            children: [
                                                              InkWell(
                                                                  onTap: (){
-                                                                   int quantity = snapshot.data![index].quantity;
-                                                                   int finalQuantity= val.subFinalQuantity(quantity);
-                                                                   print(finalQuantity);
-                                                                   if(finalQuantity>=1){
-                                                                   int price = snapshot.data![index].intialPrize;
-                                                                   int finalPrice = val.subFinalPrice(finalQuantity, price);
-                                                                   print(finalPrice);
-                                                                   dbHelper.updateData(
-                                                                       Cart(
-                                                                           id: snapshot.data![index].id,
-                                                                           productId: snapshot.data![index].id.toString(),
-                                                                           productName: snapshot.data![index].productName,
-                                                                           intialPrize: snapshot.data![index].intialPrize,
-                                                                           productPrize: finalPrice,
-                                                                           quantity: finalQuantity,
-                                                                           unitTag: snapshot.data![index].unitTag,
-                                                                           image: snapshot.data![index].image)
-                                                                   ).then((value) {});
-                                                                   val.removeTotalPrice(snapshot.data![index].intialPrize.toDouble())
-                                                                   ;
-                                                                   }
+                                                                   val.updateSubtractData(Cart(
+                                                                       id: snapshot.data![index].id,
+                                                                       productId: snapshot.data![index].id.toString(),
+                                                                       productName: snapshot.data![index].productName,
+                                                                       intialPrize: snapshot.data![index].intialPrize,
+                                                                       productPrize: snapshot.data![index].quantity*snapshot.data![index].intialPrize,
+                                                                       quantity: snapshot.data![index].quantity,
+                                                                       unitTag: snapshot.data![index].unitTag,
+                                                                       image: snapshot.data![index].image));
                                                                  }
                                                                 , child: Icon(Icons.remove)),
                                                              Text(snapshot.data![index].quantity.toString()
                                                                ,style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
                                                              InkWell(
                                                                  onTap: (){
-                                                                   int quantity = snapshot.data![index].quantity;
-                                                                   int finalQuantity= val.addFinalQuantity(quantity);
-                                                                    int price = snapshot.data![index].intialPrize;
-                                                                   int finalPrice = val.addFinalPrice(finalQuantity, price);
-                                                                      dbHelper.updateData(
+                                                                      val.updateAddData(
                                                                         Cart(
                                                                             id: snapshot.data![index].id,
                                                                             productId: snapshot.data![index].id.toString(),
                                                                             productName: snapshot.data![index].productName,
                                                                             intialPrize: snapshot.data![index].intialPrize,
-                                                                            productPrize: finalPrice,
-                                                                            quantity: finalQuantity,
+                                                                            productPrize: snapshot.data![index].intialPrize * snapshot.data![index].quantity,
+                                                                            quantity: snapshot.data![index].quantity,
                                                                             unitTag: snapshot.data![index].unitTag,
                                                                             image: snapshot.data![index].image)
-                                                                      ).then((value) {
-                                                                        val.addTotalPrice(snapshot.data![index].intialPrize.toDouble());
-                                                                      });
+                                                                      );
 
                                                                  },
                                                                  child: Icon(Icons.add))

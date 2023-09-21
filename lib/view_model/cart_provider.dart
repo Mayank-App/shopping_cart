@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopping_cart/models/database/database_helper.dart';
 
 import '../models/database/database_model/cart_model.dart';
+import '../utils/utils.dart';
 class CartProvider extends ChangeNotifier{
 
   DBHelper dbHelper = DBHelper();
@@ -77,16 +78,50 @@ class CartProvider extends ChangeNotifier{
      return price;
 
   }
-  int subFinalQuantity(int quantity){
-    quantity--;
-    notifyListeners();
-    return quantity;
+  // int subFinalQuantity(int quantity){
+  //   quantity--;
+  //   notifyListeners();
+  //   return quantity;
+  //
+  // }
+  // int subFinalPrice(int quantity ,int price){
+  //   price = quantity * price;
+  //   notifyListeners();
+  //   return price;
+  // }
+
+  updateSubtractData(Cart cart){
+    // Utils.toastMessage("Item  Removed ${cart.quantity}");
+       if(cart.quantity > 1){
+         // Utils.toastMessage("Item  Removed ${cart.quantity}");
+         cart.productPrize = cart.productPrize - cart.intialPrize;
+         cart.quantity = cart.quantity-1;
+         removeTotalPrice(cart.intialPrize.toDouble());
+         dbHelper.updateData(cart).then((value) {
+
+          Utils.toastMessage("Item Remains ${cart.quantity}");
+         }).onError((error, stackTrace) {
+           print(error);
+           Utils.toastMessage("Error");
+         });
+         notifyListeners();
+       }
 
   }
-  int subFinalPrice(int quantity ,int price){
-    price = quantity * price;
-    notifyListeners();
-    return price;
+
+  updateAddData(Cart cart){
+      // Utils.toastMessage("Item  Removed ${cart.quantity}");
+      cart.productPrize = cart.productPrize + cart.intialPrize;
+      cart.quantity = cart.quantity+1;
+      addTotalPrice(cart.intialPrize.toDouble());
+      dbHelper.updateData(cart).then((value) {
+        Utils.toastMessage("Item Remains ${cart.quantity}");
+      }).onError((error, stackTrace) {
+        print(error);
+        Utils.toastMessage("Error");
+      });
+      notifyListeners();
+
 
   }
 

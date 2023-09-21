@@ -1,12 +1,12 @@
 class Cart {
   late final int id;
-  final String productId;
-  final String productName;
-  final int intialPrize;
-  final int productPrize;
-  final int quantity;
-  final String unitTag;
-  final String image;
+   String productId;
+   String productName;
+   int intialPrize;
+   int productPrize;
+   int quantity;
+   String unitTag;
+   String image;
 
   Cart({
     required this.id,

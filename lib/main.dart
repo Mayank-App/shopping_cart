@@ -1,10 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_cart/utils/routes/routes.dart';
 import 'package:shopping_cart/utils/routes/routes_name.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_cart/view_model/auth_provider.dart';
 import 'package:shopping_cart/view_model/cart_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -14,7 +19,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_)=>CartProvider())
+      ChangeNotifierProvider(create: (_)=>CartProvider()),
+      ChangeNotifierProvider(create: (_)=>AuthProvider())
     ],
     child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -23,7 +29,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        initialRoute: RoutesName.productList ,
+        initialRoute: RoutesName.splashScreen ,
         onGenerateRoute: Routes.generateRoute
     ));
   }

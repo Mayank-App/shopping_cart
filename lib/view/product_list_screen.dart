@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_cart/models/database/database_helper.dart';
 import 'package:shopping_cart/models/database/database_model/cart_model.dart';
 import 'package:shopping_cart/utils/routes/routes_name.dart';
 import 'package:shopping_cart/utils/utils.dart';
+import 'package:shopping_cart/view_model/auth_provider.dart';
 import 'package:shopping_cart/view_model/cart_provider.dart';
 
 class ProductListView extends StatefulWidget{
@@ -13,6 +15,7 @@ class ProductListView extends StatefulWidget{
 
 class _ProductListViewState extends State<ProductListView> {
   DBHelper dbHelper = DBHelper();
+  final _auth = FirebaseAuth.instance;
   List<String> productName = [
     'Apple',
     'Banana',
@@ -85,10 +88,20 @@ class _ProductListViewState extends State<ProductListView> {
     //final provider = Provider.of<CartProvider>(context);
    return Scaffold(
      appBar: AppBar(
-       title:  Text("Product List",style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
+       title:  const Text("Product List",style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
        backgroundColor: Colors.purple,
        centerTitle: true,
        actions: [
+        Consumer<AuthProvider>(builder: (context,val,child) {
+          return  IconButton(onPressed: (){
+          _auth.signOut().then((value){
+            Navigator.pushNamed(context, RoutesName.login);
+            val.email.clear();
+            val.password.clear();
+          }).onError((error, stackTrace) {
+            Utils.toastMessage(error.toString());
+          });
+        }, icon: const Icon(Icons.logout_outlined,color: Colors.white,));  }, ),
          InkWell(
            onTap: (){
              Navigator.pushNamed(context, RoutesName.cartList);
@@ -100,9 +113,9 @@ class _ProductListViewState extends State<ProductListView> {
    },
      )
              ,
-             child: Icon(Icons.shopping_bag_outlined,color: Colors.white,),),
+             child: const Icon(Icons.shopping_bag_outlined,color: Colors.white,),),
          ),
-         SizedBox(width: 20,)
+         const SizedBox(width: 20,)
        ],
      ),
      body: Column(
@@ -123,11 +136,11 @@ class _ProductListViewState extends State<ProductListView> {
                            child: Column(
                              crossAxisAlignment: CrossAxisAlignment.start
                             , children: [
-                               Text(productName[index].toString(),style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                               Text(productName[index].toString(),style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
                                Row(
                                  children: [
-                                   Text(productUnit[index].toString(),style: TextStyle(fontWeight: FontWeight.w600),),
-                                   Text("  \$"+productPrize[index].toString(),style: TextStyle(fontWeight: FontWeight.w600),)
+                                   Text(productUnit[index].toString(),style: const TextStyle(fontWeight: FontWeight.w600),),
+                                   Text("  \$${productPrize[index]}",style: const TextStyle(fontWeight: FontWeight.w600),)
 
                                  ],
                                ),
@@ -160,7 +173,7 @@ class _ProductListViewState extends State<ProductListView> {
                                          color: Colors.green,
                                          borderRadius: BorderRadius.circular(10)
                                      ),
-                                     child: Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),)),
+                                     child: const Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),)),
                                    ),
                                  );
                                },

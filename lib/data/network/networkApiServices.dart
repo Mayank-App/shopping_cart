@@ -6,34 +6,35 @@ import 'package:http/http.dart';
 import '../response/api_exceptions.dart';
 import 'baseApiServices.dart';
 
-class NetworkApiServices extends BaseApiServices{
+class NetworkApiServices extends BaseApiServices {
   @override
-
   Future getGetApiResponse(String url) async {
     dynamic responseJson;
-    try{
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
+    try {
+      final response =
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
       responseJson = returnResponse(response);
-    }on SocketException{
+    } on SocketException {
       throw FetchDataException("No internet connection");
     }
     return responseJson;
-
   }
 
   @override
-  Future getPostApiResponse(dynamic data, String url) async{
+  Future getPostApiResponse(dynamic data, String url) async {
     dynamic responseJson;
-    try{
-      Response response = await post(Uri.parse(url), body: data).timeout(const Duration(seconds: 10));
+    try {
+      Response response = await post(Uri.parse(url), body: data)
+          .timeout(const Duration(seconds: 10));
       responseJson = returnResponse(response);
-    }on SocketException{
+    } on SocketException {
       throw FetchDataException("No internet connection");
     }
     return responseJson;
   }
-  dynamic returnResponse(http.Response response){
-    switch (response.statusCode){
+
+  dynamic returnResponse(http.Response response) {
+    switch (response.statusCode) {
       case 200:
         dynamic responseJson = jsonDecode(response.body.toString());
         return responseJson;
@@ -45,8 +46,10 @@ class NetworkApiServices extends BaseApiServices{
         throw UnauthorisedException(response.body.toString());
 
       default:
-        throw FetchDataException("Error occured while communicating with server "+"with status code"+response.body.toString());
+        throw FetchDataException(
+            "Error occured while communicating with server " +
+                "with status code" +
+                response.body.toString());
     }
-
   }
 }

@@ -1,24 +1,20 @@
-
-
 import 'package:shopping_cart/data/response/status.dart';
 
-class ApiResponse<T>{
+class ApiResponse<T> {
   Status? status;
   T? data;
   String? message;
 
-  ApiResponse(this.status,this.data,this.message);
+  ApiResponse(this.status, this.data, this.message);
 
-  ApiResponse.loading() : status=Status.LOADING;
+  ApiResponse.loading() : status = Status.LOADING;
 
-  ApiResponse.completed() : status=Status.COMPLETED;
+  ApiResponse.completed() : status = Status.COMPLETED;
 
-  ApiResponse.error() : status=Status.LOADING;
+  ApiResponse.error() : status = Status.LOADING;
 
   @override
-
-  String toString(){
+  String toString() {
     return "Status :$status \n Message : $message \n Data :$data";
   }
-
 }

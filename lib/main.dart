@@ -18,20 +18,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_)=>CartProvider()),
-      ChangeNotifierProvider(create: (_)=>AuthProvider())
-    ],
-    child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        initialRoute: RoutesName.splashScreen ,
-        onGenerateRoute: Routes.generateRoute
-    ));
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CartProvider()),
+          ChangeNotifierProvider(create: (_) => AuthProvider())
+        ],
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            initialRoute: RoutesName.splashScreen,
+            onGenerateRoute: Routes.generateRoute));
   }
 }
-

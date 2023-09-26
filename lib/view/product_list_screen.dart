@@ -8,7 +8,7 @@ import 'package:shopping_cart/utils/utils.dart';
 import 'package:shopping_cart/view_model/auth_provider.dart';
 import 'package:shopping_cart/view_model/cart_provider.dart';
 
-class ProductListView extends StatefulWidget{
+class ProductListView extends StatefulWidget {
   @override
   State<ProductListView> createState() => _ProductListViewState();
 }
@@ -37,7 +37,27 @@ class _ProductListViewState extends State<ProductListView> {
     'Pear',
     'Apricot',
   ];
-  List<int> productPrize =[80,60,70,120,130,50,60,110,90,140,125,145,30,40,60,160,145,75,125];
+  List<int> productPrize = [
+    80,
+    60,
+    70,
+    120,
+    130,
+    50,
+    60,
+    110,
+    90,
+    140,
+    125,
+    145,
+    30,
+    40,
+    60,
+    160,
+    145,
+    75,
+    125
+  ];
   List<String> productUnit = [
     'KG', // Apple
     'dazon', // Banana
@@ -82,117 +102,169 @@ class _ProductListViewState extends State<ProductListView> {
     'https://www.freshproduceshoppe.com/wp-content/uploads/2018/09/apricot-freshproduceshoppe-1024x1024.jpg'
   ];
 
-
   @override
   Widget build(BuildContext context) {
     //final provider = Provider.of<CartProvider>(context);
-   return Scaffold(
-     appBar: AppBar(
-       title:  const Text("Product List",style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
-       backgroundColor: Colors.purple,
-       centerTitle: true,
-       actions: [
-        Consumer<AuthProvider>(builder: (context,val,child) {
-          return  IconButton(onPressed: (){
-          _auth.signOut().then((value){
-            Navigator.pushNamed(context, RoutesName.login);
-            val.email.clear();
-            val.password.clear();
-          }).onError((error, stackTrace) {
-            Utils.toastMessage(error.toString());
-          });
-        }, icon: const Icon(Icons.logout_outlined,color: Colors.white,));  }, ),
-         InkWell(
-           onTap: (){
-             Navigator.pushNamed(context, RoutesName.cartList);
-           },
-           child: Badge(
-             label: Consumer<CartProvider>(
-           builder: (context,value,child){
-             return  Text(value.getCounter().toString());
-   },
-     )
-             ,
-             child: const Icon(Icons.shopping_bag_outlined,color: Colors.white,),),
-         ),
-         const SizedBox(width: 20,)
-       ],
-     ),
-     body: Column(
-       children: [
-         Expanded(
-             child:ListView.builder(itemCount:productName.length,itemBuilder: (context,index){
-               return Card(
-                 child: Padding(
-                   padding: const EdgeInsets.only(left: 15),
-                   child: Row(
-                     children: [
-                     SizedBox(
-                       height: 100,
-                         width: 100,child: Image.network(productImage[index].toString())),
-                       Expanded(
-                         child: Padding(
-                           padding: const EdgeInsets.only(left: 10,right: 4),
-                           child: Column(
-                             crossAxisAlignment: CrossAxisAlignment.start
-                            , children: [
-                               Text(productName[index].toString(),style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
-                               Row(
-                                 children: [
-                                   Text(productUnit[index].toString(),style: const TextStyle(fontWeight: FontWeight.w600),),
-                                   Text("  \$${productPrize[index]}",style: const TextStyle(fontWeight: FontWeight.w600),)
-
-                                 ],
-                               ),
-                             Align(
-                               alignment: Alignment.bottomRight,
-                               child: Consumer<CartProvider>(builder: ( context, val, child) {
-                                 return   InkWell(
-                                   onTap: () async{
-                                     await dbHelper.insertIntoDB(
-                                         Cart(id: index,
-                                             productId: index.toString(),
-                                             productName: productName[index],
-                                             intialPrize: productPrize[index],
-                                             productPrize: productPrize[index],
-                                             quantity: 1,
-                                             unitTag: productUnit[index].toString(),
-                                             image: productImage[index].toString())
-                                     ).then((value){
-                                       Utils.toastMessage("Item Added in Cart");
-                                       val.addCounter();
-                                       val.addTotalPrice(double.parse(productPrize[index].toString()));
-                                     }).onError((error, stackTrace){
-                                     Utils.toastMessage("Already Item Added in Cart");
-                                     });
-                                   },
-                                   child: Container(
-                                     height: 35,
-                                     width: 100,
-                                     decoration:  BoxDecoration(
-                                         color: Colors.green,
-                                         borderRadius: BorderRadius.circular(10)
-                                     ),
-                                     child: const Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),)),
-                                   ),
-                                 );
-                               },
-
-                               )
-
-                             )
-                             ],
-                           ),
-                         ),
-                       )
-                     ],
-                   ),
-                 ),
-               );
-             })
-         )
-       ],
-     ),
-   );
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Product List",
+          style: TextStyle(
+              color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.purple,
+        centerTitle: true,
+        actions: [
+          Consumer<AuthProvider>(
+            builder: (context, val, child) {
+              return IconButton(
+                  onPressed: () {
+                    _auth.signOut().then((value) {
+                      Navigator.pushNamed(context, RoutesName.login);
+                      val.email.clear();
+                      val.password.clear();
+                    }).onError((error, stackTrace) {
+                      Utils.toastMessage(error.toString());
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.logout_outlined,
+                    color: Colors.white,
+                  ));
+            },
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, RoutesName.cartList);
+            },
+            child: Badge(
+              label: Consumer<CartProvider>(
+                builder: (context, value, child) {
+                  return Text(value.getCounter().toString());
+                },
+              ),
+              child: const Icon(
+                Icons.shopping_bag_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+              child: ListView.builder(
+                  itemCount: productName.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                                height: 100,
+                                width: 100,
+                                child: Image.network(
+                                    productImage[index].toString())),
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      productName[index].toString(),
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          productUnit[index].toString(),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(
+                                          "  \$${productPrize[index]}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      ],
+                                    ),
+                                    Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Consumer<CartProvider>(
+                                          builder: (context, val, child) {
+                                            return InkWell(
+                                              onTap: () async {
+                                                await dbHelper
+                                                    .insertIntoDB(Cart(
+                                                        id: index,
+                                                        productId:
+                                                            index.toString(),
+                                                        productName:
+                                                            productName[index],
+                                                        intialPrize:
+                                                            productPrize[index],
+                                                        productPrize:
+                                                            productPrize[index],
+                                                        quantity: 1,
+                                                        unitTag:
+                                                            productUnit[index]
+                                                                .toString(),
+                                                        image:
+                                                            productImage[index]
+                                                                .toString()))
+                                                    .then((value) {
+                                                  Utils.toastMessage(
+                                                      "Item Added in Cart");
+                                                  val.addCounter();
+                                                  val.addTotalPrice(
+                                                      double.parse(
+                                                          productPrize[index]
+                                                              .toString()));
+                                                }).onError((error, stackTrace) {
+                                                  Utils.toastMessage(
+                                                      "Already Item Added in Cart");
+                                                });
+                                              },
+                                              child: Container(
+                                                height: 35,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: const Center(
+                                                    child: Text(
+                                                  "Add to cart",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                )),
+                                              ),
+                                            );
+                                          },
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }))
+        ],
+      ),
+    );
   }
 }

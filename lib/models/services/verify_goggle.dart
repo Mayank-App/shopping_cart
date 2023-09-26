@@ -18,5 +18,3 @@ class VerifyGoggle {
     return await FirebaseAuth.instance.signInWithCredential(cred);
   }
 }
-
-
